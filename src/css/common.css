@@ -76,3 +76,26 @@ a:focus {
   background-image: url("../img/ajax-loader.gif");
   background-repeat: no-repeat;
 }
+
+.rect{
+  border-radius: 5px !important;
+}
+.circle{
+  border-radius: 100% !important;
+}
+
+/* .triangle{
+  border-left: 20px solid transparent !important;
+  border-right: 20px solid transparent !important;
+} */
+.line canvas{
+  cursor: pointer;
+}
+
+.triangle {
+  -webkit-clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+          clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  margin: 0 auto !important;
+  text-align: center !important;
+  padding: 1rem !important;
+}

@@ -7,13 +7,13 @@
  * 
  * @constructor
  */
-mindmaps.CanvasView = function() {
+mindmaps.CanvasView = function () {
   /**
    * Returns the element that used to draw the map upon.
    * 
    * @returns {jQuery}
    */
-  this.$getDrawingArea = function() {
+  this.$getDrawingArea = function () {
     return $("#drawing-area");
   };
 
@@ -22,14 +22,14 @@ mindmaps.CanvasView = function() {
    * 
    * @returns {jQuery}
    */
-  this.$getContainer = function() {
+  this.$getContainer = function () {
     return $("#canvas-container");
   };
 
   /**
    * Scrolls the container to show the center of the drawing area.
    */
-  this.center = function() {
+  this.center = function () {
     var c = this.$getContainer();
     var area = this.$getDrawingArea();
     var w = area.width() - c.width();
@@ -43,7 +43,7 @@ mindmaps.CanvasView = function() {
    * @param {Number} x
    * @param {Number} y
    */
-  this.scroll = function(x, y) {
+  this.scroll = function (x, y) {
     var c = this.$getContainer();
     c.scrollLeft(x).scrollTop(y);
   };
@@ -52,7 +52,7 @@ mindmaps.CanvasView = function() {
    * Changes the size of the drawing area to match with with the new zoom
    * factor and scrolls the container to adjust the view port.
    */
-  this.applyViewZoom = function() {
+  this.applyViewZoom = function () {
     var delta = this.zoomFactorDelta;
     // console.log(delta);
 
@@ -95,7 +95,7 @@ mindmaps.CanvasView = function() {
    * @param {Integer} width
    * @param {Integer} height
    */
-  this.setDimensions = function(width, height) {
+  this.setDimensions = function (width, height) {
     width = width * this.zoomFactor;
     height = height * this.zoomFactor;
 
@@ -108,7 +108,7 @@ mindmaps.CanvasView = function() {
    * 
    * @param {Number} zoomFactor
    */
-  this.setZoomFactor = function(zoomFactor) {
+  this.setZoomFactor = function (zoomFactor) {
     this.zoomFactorDelta = zoomFactor / (this.zoomFactor || 1);
     this.zoomFactor = zoomFactor;
   };
@@ -119,7 +119,7 @@ mindmaps.CanvasView = function() {
  * 
  * @param {mindmaps.MindMap} map
  */
-mindmaps.CanvasView.prototype.drawMap = function(map) {
+mindmaps.CanvasView.prototype.drawMap = function (map) {
   throw new Error("Not implemented");
 };
 
@@ -130,12 +130,12 @@ mindmaps.CanvasView.prototype.drawMap = function(map) {
  * @extends mindmaps.CanvasView
  * @constructor
  */
-mindmaps.DefaultCanvasView = function() {
+mindmaps.DefaultCanvasView = function () {
   var self = this;
   var nodeDragging = false;
   var creator = new Creator(this);
   var captionEditor = new CaptionEditor(this);
-  captionEditor.commit = function(node, text) {
+  captionEditor.commit = function (node, text) {
     if (self.nodeCaptionEditCommitted) {
       self.nodeCaptionEditCommitted(node, text);
     }
@@ -143,13 +143,13 @@ mindmaps.DefaultCanvasView = function() {
 
   var textMetrics = mindmaps.TextMetrics;
   var branchDrawer = new mindmaps.CanvasBranchDrawer();
-  branchDrawer.beforeDraw = function(width, height, left, top) {
+  branchDrawer.beforeDraw = function (width, height, left, top) {
     this.$canvas.attr({
-      width : width,
-      height : height
+      width: width,
+      height: height
     }).css({
-      left : left,
-      top : top
+      left: left,
+      top: top
     });
   };
 
@@ -158,10 +158,10 @@ mindmaps.DefaultCanvasView = function() {
    */
   function makeDraggable() {
     self.$getContainer().dragscrollable({
-      dragSelector : "#drawing-area, canvas.line-canvas",
-      acceptPropagatedEvent : false,
-      delegateMode : true,
-      preventDefault : true
+      dragSelector: "#drawing-area, canvas.line-canvas",
+      acceptPropagatedEvent: false,
+      delegateMode: true,
+      preventDefault: true
     });
   }
 
@@ -178,17 +178,17 @@ mindmaps.DefaultCanvasView = function() {
   }
 
   function drawLineCanvas($canvas, depth, offsetX, offsetY, $node, $parent,
-      color) {
+    color) {
     var canvas = $canvas[0];
     var ctx = canvas.getContext("2d");
 
     // set $canvas for beforeDraw() callback.
     branchDrawer.$canvas = $canvas;
     branchDrawer.render(ctx, depth, offsetX, offsetY, $node, $parent,
-        color, self.zoomFactor);
+      color, self.zoomFactor);
   }
 
-  this.init = function() {
+  this.init = function () {
     makeDraggable();
     this.center();
 
@@ -196,28 +196,28 @@ mindmaps.DefaultCanvasView = function() {
     $drawingArea.addClass("mindmap");
 
     // setup delegates
-    $drawingArea.delegate("div.node-caption", "mousedown", function(e) {
+    $drawingArea.delegate("div.node-caption", "mousedown", function (e) {
       var node = $(this).parent().data("node");
       if (self.nodeMouseDown) {
         self.nodeMouseDown(node);
       }
     });
 
-    $drawingArea.delegate("div.node-caption", "mouseup", function(e) {
+    $drawingArea.delegate("div.node-caption", "mouseup", function (e) {
       var node = $(this).parent().data("node");
       if (self.nodeMouseUp) {
         self.nodeMouseUp(node);
       }
     });
 
-    $drawingArea.delegate("div.node-caption", "dblclick", function(e) {
+    $drawingArea.delegate("div.node-caption", "dblclick", function (e) {
       var node = $(this).parent().data("node");
       if (self.nodeDoubleClicked) {
         self.nodeDoubleClicked(node);
       }
     });
 
-    $drawingArea.delegate("div.node-container", "mouseover", function(e) {
+    $drawingArea.delegate("div.node-container", "mouseover", function (e) {
       if (e.target === this) {
         var node = $(this).data("node");
         if (self.nodeMouseOver) {
@@ -227,7 +227,7 @@ mindmaps.DefaultCanvasView = function() {
       return false;
     });
 
-    $drawingArea.delegate("div.node-caption", "mouseover", function(e) {
+    $drawingArea.delegate("div.node-caption", "mouseover", function (e) {
       if (e.target === this) {
         var node = $(this).parent().data("node");
         if (self.nodeCaptionMouseOver) {
@@ -238,7 +238,7 @@ mindmaps.DefaultCanvasView = function() {
     });
 
     // mouse wheel listener
-    this.$getContainer().bind("mousewheel", function(e, delta) {
+    this.$getContainer().bind("mousewheel", function (e, delta) {
       if (self.mouseWheeled) {
         self.mouseWheeled(delta);
       }
@@ -248,7 +248,7 @@ mindmaps.DefaultCanvasView = function() {
   /**
    * Clears the drawing area.
    */
-  this.clear = function() {
+  this.clear = function () {
     var drawingArea = this.$getDrawingArea();
     drawingArea.children().remove();
     drawingArea.width(0).height(0);
@@ -260,7 +260,7 @@ mindmaps.DefaultCanvasView = function() {
    * @param {Integer} depth the depth of the node
    * @returns {Number}
    */
-  this.getLineWidth = function(depth) {
+  this.getLineWidth = function (depth) {
     return mindmaps.CanvasDrawingUtil.getLineWidth(this.zoomFactor, depth);
   };
 
@@ -268,7 +268,7 @@ mindmaps.DefaultCanvasView = function() {
    * Draws the complete map onto the drawing area. This should only be called
    * once for a mind map.
    */
-  this.drawMap = function(map) {
+  this.drawMap = function (map) {
     var now = new Date().getTime();
     var $drawingArea = this.$getDrawingArea();
 
@@ -308,7 +308,7 @@ mindmaps.DefaultCanvasView = function() {
    *            the root. If argument is omitted the getDepth() method of the
    *            node is called to resolve the depth.
    */
-  this.createNode = function(node, $parent, depth) {
+  this.createNode = function (node, $parent, depth) {
     var parent = node.getParent();
     var $parent = $parent || $getNode(parent);
     var depth = depth || node.getDepth();
@@ -317,12 +317,12 @@ mindmaps.DefaultCanvasView = function() {
 
     // div node container
     var $node = $("<div/>", {
-      id : "node-" + node.id,
-      "class" : "node-container"
+      id: "node-" + node.id,
+      "class": "node-container"
     }).data({
-      node : node
+      node: node
     }).css({
-      "font-size" : node.text.font.size
+      "font-size": node.text.font.size
     });
     $node.appendTo($parent);
 
@@ -338,9 +338,9 @@ mindmaps.DefaultCanvasView = function() {
       var bb = bThickness + "px solid " + bColor;
 
       $node.css({
-        left : this.zoomFactor * offsetX,
-        top : this.zoomFactor * offsetY,
-        "border-bottom" : bb
+        left: this.zoomFactor * offsetX,
+        top: this.zoomFactor * offsetY,
+        "border-bottom": 1
       });
 
       // node drag behaviour
@@ -348,16 +348,16 @@ mindmaps.DefaultCanvasView = function() {
        * Only attach the drag handler once we mouse over it. this speeds
        * up loading of big maps.
        */
-      $node.one("mouseenter", function() {
+      $node.one("mouseenter", function () {
         $node.draggable({
           // could be set
           // revert: true,
           // revertDuration: 0,
-          handle : "div.node-caption:first",
-          start : function() {
+          handle: "div.node-caption:first",
+          start: function () {
             nodeDragging = true;
           },
-          drag : function(e, ui) {
+          drag: function (e, ui) {
             // reposition and draw canvas while dragging
             var offsetX = ui.position.left / self.zoomFactor;
             var offsetY = ui.position.top / self.zoomFactor;
@@ -365,18 +365,18 @@ mindmaps.DefaultCanvasView = function() {
             var $canvas = $getNodeCanvas(node);
 
             drawLineCanvas($canvas, depth, offsetX, offsetY, $node,
-                $parent, color);
+              $parent, color);
 
             // fire dragging event
             if (self.nodeDragging) {
               self.nodeDragging();
             }
           },
-          stop : function(e, ui) {
+          stop: function (e, ui) {
             nodeDragging = false;
             var pos = new mindmaps.Point(ui.position.left
-                / self.zoomFactor, ui.position.top
-                / self.zoomFactor);
+              / self.zoomFactor, ui.position.top
+            / self.zoomFactor);
 
             // fire dragged event
             if (self.nodeDragged) {
@@ -390,15 +390,15 @@ mindmaps.DefaultCanvasView = function() {
     // text caption
     var font = node.text.font;
     var $text = $("<div/>", {
-      id : "node-caption-" + node.id,
-      "class" : "node-caption node-text-behaviour",
-      text : node.text.caption
+      id: "node-caption-" + node.id,
+      "class": "node-caption node-text-behaviour",
+      text: node.text.caption
     }).css({
-      "color" : font.color,
-      "font-size" : this.zoomFactor * 100 + "%",
-      "font-weight" : font.weight,
-      "font-style" : font.style,
-      "text-decoration" : font.decoration
+      "color": font.color,
+      "font-size": this.zoomFactor * 100 + "%",
+      "font-weight": font.weight,
+      "font-style": font.style,
+      "text-decoration": font.decoration
     }).appendTo($node);
 
     var metrics = textMetrics.getTextMetrics(node, this.zoomFactor);
@@ -421,13 +421,13 @@ mindmaps.DefaultCanvasView = function() {
 
       // draw canvas to parent if node is not a root
       var $canvas = $("<canvas/>", {
-        id : "node-canvas-" + node.id,
-        "class" : "line-canvas"
+        id: "node-canvas-" + node.id,
+        "class": "line-canvas"
       });
 
       // position and draw connection
       drawLineCanvas($canvas, depth, offsetX, offsetY, $node, $parent,
-          node.branchColor);
+        node.branchColor);
       $canvas.appendTo($node);
     }
 
@@ -436,7 +436,7 @@ mindmaps.DefaultCanvasView = function() {
     }
 
     // draw child nodes
-    node.forEachChild(function(child) {
+    node.forEachChild(function (child) {
       self.createNode(child, $node, depth + 1);
     });
   };
@@ -447,7 +447,7 @@ mindmaps.DefaultCanvasView = function() {
    * 
    * @param {mindmaps.Node} node
    */
-  this.deleteNode = function(node) {
+  this.deleteNode = function (node) {
     // detach creator first, we need still him
     // creator.detach();
 
@@ -461,8 +461,9 @@ mindmaps.DefaultCanvasView = function() {
    * 
    * @param {mindmaps.Node} node
    */
-  this.highlightNode = function(node) {
+  this.highlightNode = function (node) {
     var $text = $getNodeCaption(node);
+    $("#inspector-branch-edit-node").val($text.text());
     $text.addClass("selected");
   };
 
@@ -471,7 +472,7 @@ mindmaps.DefaultCanvasView = function() {
    * 
    * @param {mindmaps.Node} node
    */
-  this.unhighlightNode = function(node) {
+  this.unhighlightNode = function (node) {
     var $text = $getNodeCaption(node);
     $text.removeClass("selected");
   };
@@ -481,7 +482,7 @@ mindmaps.DefaultCanvasView = function() {
    * 
    * @param {mindmaps.Node} node
    */
-  this.closeNode = function(node) {
+  this.closeNode = function (node) {
     var $node = $getNode(node);
     $node.children(".node-container").hide();
 
@@ -494,7 +495,7 @@ mindmaps.DefaultCanvasView = function() {
    * 
    * @param {mindmaps.Node} node
    */
-  this.openNode = function(node) {
+  this.openNode = function (node) {
     var $node = $getNode(node);
     $node.children(".node-container").show();
 
@@ -507,12 +508,12 @@ mindmaps.DefaultCanvasView = function() {
    * 
    * @param {mindmaps.Node} node
    */
-  this.createFoldButton = function(node) {
+  this.createFoldButton = function (node) {
     var position = node.offset.x > 0 ? " right" : " left";
     var openClosed = node.foldChildren ? " closed" : " open";
     var $foldButton = $("<div/>", {
-      "class" : "button-fold no-select" + openClosed + position
-    }).click(function(e) {
+      "class": "button-fold no-select" + openClosed + position
+    }).click(function (e) {
       // fire event
       if (self.foldButtonClicked) {
         self.foldButtonClicked(node);
@@ -525,7 +526,7 @@ mindmaps.DefaultCanvasView = function() {
     // remember that foldButton was set and attach to node
     var $node = $getNode(node);
     $node.data({
-      foldButton : true
+      foldButton: true
     }).append($foldButton);
   };
 
@@ -534,10 +535,10 @@ mindmaps.DefaultCanvasView = function() {
    * 
    * @param {mindmaps.Node} node
    */
-  this.removeFoldButton = function(node) {
+  this.removeFoldButton = function (node) {
     var $node = $getNode(node);
     $node.data({
-      foldButton : false
+      foldButton: false
     }).children(".button-fold").remove();
   };
 
@@ -546,14 +547,14 @@ mindmaps.DefaultCanvasView = function() {
    * 
    * @param {mindmaps.Node} node
    */
-  this.editNodeCaption = function(node) {
+  this.editNodeCaption = function (node) {
     captionEditor.edit(node, this.$getDrawingArea());
   };
 
   /**
    * Stops the current edit mode.
    */
-  this.stopEditNodeCaption = function() {
+  this.stopEditNodeCaption = function () {
     captionEditor.stop();
   };
 
@@ -563,7 +564,7 @@ mindmaps.DefaultCanvasView = function() {
    * @param {mindmaps.Node} node
    * @param {String} value
    */
-  this.setNodeText = function(node, value) {
+  this.setNodeText = function (node, value) {
     var $text = $getNodeCaption(node);
     var metrics = textMetrics.getTextMetrics(node, this.zoomFactor, value);
     $text.css(metrics).text(value);
@@ -574,7 +575,7 @@ mindmaps.DefaultCanvasView = function() {
    * 
    * @returns {Creator}
    */
-  this.getCreator = function() {
+  this.getCreator = function () {
     return creator;
   };
 
@@ -583,7 +584,7 @@ mindmaps.DefaultCanvasView = function() {
    * 
    * @returns {Boolean}
    */
-  this.isNodeDragging = function() {
+  this.isNodeDragging = function () {
     return nodeDragging;
   };
 
@@ -612,7 +613,7 @@ mindmaps.DefaultCanvasView = function() {
    * 
    * @param {mindmaps.Node} node
    */
-  this.redrawNodeConnectors = function(node) {
+  this.redrawNodeConnectors = function (node) {
 
     // redraw canvas to parent
     if (!node.isRoot()) {
@@ -621,7 +622,7 @@ mindmaps.DefaultCanvasView = function() {
 
     // redraw all child canvases
     if (!node.isLeaf()) {
-      node.forEachChild(function(child) {
+      node.forEachChild(function (child) {
         drawNodeCanvas(child);
       });
     }
@@ -630,10 +631,10 @@ mindmaps.DefaultCanvasView = function() {
   /**
    * Changes only the color of the branch leading up to it's parent.
    */
-  this.updateBranchColor = function(node, color) {
+  this.updateBranchColor = function (node, color) {
     var $node = $getNode(node);
     $node.css("border-bottom-color", color);
-    
+
     // redraw canvas to parent
     if (!node.isRoot()) {
       drawNodeCanvas(node, color);
@@ -643,7 +644,7 @@ mindmaps.DefaultCanvasView = function() {
   /**
    * Changes only the font color of a node.
    */
-  this.updateFontColor = function(node, color) {
+  this.updateFontColor = function (node, color) {
     var $text = $getNodeCaption(node);
     $text.css("color", color);
   };
@@ -653,39 +654,59 @@ mindmaps.DefaultCanvasView = function() {
    * 
    * @param {mindmaps.Node} node
    */
-  this.updateNode = function(node) {
+  this.updateNode = function (node) {
     var $node = $getNode(node);
     var $text = $getNodeCaption(node);
     var font = node.text.font;
     $node.css({
-      "font-size" : font.size,
-      "border-bottom-color" : node.branchColor
+      "font-size": font.size,
+      "border-bottom-color": node.branchColor
     });
 
+    $text.text(node.text.caption);
     var metrics = textMetrics.getTextMetrics(node, this.zoomFactor);
 
     $text.css({
-      "color" : font.color,
-      "font-weight" : font.weight,
-      "font-style" : font.style,
-      "text-decoration" : font.decoration
+      "color": font.color,
+      "font-weight": font.weight,
+      "font-style": font.style,
+      "text-decoration": font.decoration
     }).css(metrics);
 
     this.redrawNodeConnectors(node);
   };
+
+  this.updateShape = function (node, shape) {
+    debugger
+    var $node = $getNode(node);
+    var $text = $getNodeCaption(node);
+    var font = node.text.font;
+    var selectedNodes = $('.selected');
+
+    if (selectedNodes && selectedNodes.length > 0) {
+      var selectedNode = selectedNodes[0];
+      // $(selectedNode).removeClass('rect');
+      // $(selectedNode).removeClass('circle');
+      // $(selectedNode).removeClass('triangle');
+      // $(selectedNode).addClass(shape);
+    }
+    this.redrawNodeConnectors(node);
+  };
+
+
 
   /**
    * Moves the node a new position.
    * 
    * @param {mindmaps.Node} node
    */
-  this.positionNode = function(node) {
+  this.positionNode = function (node) {
     var $node = $getNode(node);
     // TODO try animate
     // position
     $node.css({
-      left : this.zoomFactor * node.offset.x,
-      top : this.zoomFactor * node.offset.y
+      left: this.zoomFactor * node.offset.x,
+      top: this.zoomFactor * node.offset.y
     });
 
     // redraw canvas to parent
@@ -695,7 +716,7 @@ mindmaps.DefaultCanvasView = function() {
   /**
    * Redraws the complete map to adapt to a new zoom factor.
    */
-  this.scaleMap = function() {
+  this.scaleMap = function () {
     var zoomFactor = this.zoomFactor;
     var $root = this.$getDrawingArea().children().first();
     var root = $root.data("node");
@@ -707,13 +728,13 @@ mindmaps.DefaultCanvasView = function() {
     var $text = $getNodeCaption(root);
     var metrics = textMetrics.getTextMetrics(root, this.zoomFactor);
     $text.css(
-        {
-          "font-size" : zoomFactor * 100 + "%",
-          "left" : zoomFactor
-              * -mindmaps.TextMetrics.ROOT_CAPTION_MIN_WIDTH / 2
-        }).css(metrics);
+      {
+        "font-size": zoomFactor * 100 + "%",
+        "left": zoomFactor
+          * -mindmaps.TextMetrics.ROOT_CAPTION_MIN_WIDTH / 2
+      }).css(metrics);
 
-    root.forEachChild(function(child) {
+    root.forEachChild(function (child) {
       scale(child, 1);
     });
 
@@ -724,14 +745,14 @@ mindmaps.DefaultCanvasView = function() {
       var bWidth = self.getLineWidth(depth);
 
       $node.css({
-        left : zoomFactor * node.offset.x,
-        top : zoomFactor * node.offset.y,
-        "border-bottom-width" : bWidth
+        left: zoomFactor * node.offset.x,
+        top: zoomFactor * node.offset.y,
+        "border-bottom-width": bWidth
       });
 
       var $text = $getNodeCaption(node);
       $text.css({
-        "font-size" : zoomFactor * 100 + "%"
+        "font-size": zoomFactor * 100 + "%"
       });
 
       var metrics = textMetrics.getTextMetrics(node, self.zoomFactor);
@@ -742,7 +763,7 @@ mindmaps.DefaultCanvasView = function() {
 
       // redraw all child canvases
       if (!node.isLeaf()) {
-        node.forEachChild(function(child) {
+        node.forEachChild(function (child) {
           scale(child, depth + 1);
         });
       }
@@ -762,25 +783,25 @@ mindmaps.DefaultCanvasView = function() {
 
     // text input for node edits.
     var $editor = $("<textarea/>", {
-      id : "caption-editor",
-      "class" : "node-text-behaviour"
-    }).bind("keydown", "esc", function() {
+      id: "caption-editor",
+      "class": "node-text-behaviour"
+    }).bind("keydown", "esc", function () {
       self.stop();
-    }).bind("keydown", "return", function() {
+    }).bind("keydown", "return", function () {
       commitText();
-    }).mousedown(function(e) {
+    }).mousedown(function (e) {
       // avoid premature canceling
       e.stopPropagation();
-    }).blur(function() {
+    }).blur(function () {
       commitText();
     }).bind(
-        "input",
-        function() {
-          var metrics = textMetrics.getTextMetrics(self.node,
-              view.zoomFactor, $editor.val());
-          $editor.css(metrics);
-          alignBranches();
-        });
+      "input",
+      function () {
+        var metrics = textMetrics.getTextMetrics(self.node,
+          view.zoomFactor, $editor.val());
+        $editor.css(metrics);
+        alignBranches();
+      });
 
     function commitText() {
       if (attached && self.commit) {
@@ -791,7 +812,7 @@ mindmaps.DefaultCanvasView = function() {
     function alignBranches() {
       // slightly defer execution for better performance on slow
       // browsers
-      setTimeout(function() {
+      setTimeout(function () {
         view.redrawNodeConnectors(self.node);
       }, 1);
     }
@@ -803,7 +824,7 @@ mindmaps.DefaultCanvasView = function() {
      * @param {mindmaps.Node} node
      * @param {jQuery} $cancelArea
      */
-    this.edit = function(node, $cancelArea) {
+    this.edit = function (node, $cancelArea) {
       if (attached) {
         return;
       }
@@ -817,21 +838,21 @@ mindmaps.DefaultCanvasView = function() {
       this.text = this.$text.text();
 
       this.$text.css({
-        width : "auto",
-        height : "auto"
+        width: "auto",
+        height: "auto"
       }).empty().addClass("edit");
 
       // jquery ui prevents blur() event from happening when dragging a
       // draggable. need this
       // workaround to detect click on other draggable
-      $cancelArea.bind("mousedown.editNodeCaption", function(e) {
+      $cancelArea.bind("mousedown.editNodeCaption", function (e) {
         commitText();
       });
 
       var metrics = textMetrics.getTextMetrics(self.node,
-          view.zoomFactor, this.text);
+        view.zoomFactor, this.text);
       $editor.attr({
-        value : this.text
+        value: this.text
       }).css(metrics).appendTo(this.$text).select();
 
     };
@@ -839,7 +860,7 @@ mindmaps.DefaultCanvasView = function() {
     /**
      * Removes the editor from the node and restores its old text value.
      */
-    this.stop = function() {
+    this.stop = function () {
       if (attached) {
         attached = false;
         this.$text.removeClass("edit");
@@ -868,8 +889,8 @@ mindmaps.DefaultCanvasView = function() {
     this.lineColor = null;
 
     var $wrapper = $("<div/>", {
-      id : "creator-wrapper"
-    }).bind("remove", function(e) {
+      id: "creator-wrapper"
+    }).bind("remove", function (e) {
       // detach the creator when some removed the node or opened a new map
       self.detach();
       // and avoid removing from DOM
@@ -881,24 +902,24 @@ mindmaps.DefaultCanvasView = function() {
 
     // red dot creator element
     var $nub = $("<div/>", {
-      id : "creator-nub"
+      id: "creator-nub"
     }).appendTo($wrapper);
 
     var $fakeNode = $("<div/>", {
-      id : "creator-fakenode"
+      id: "creator-fakenode"
     }).appendTo($nub);
 
     // canvas used by the creator tool to draw new lines
     var $canvas = $("<canvas/>", {
-      id : "creator-canvas",
-      "class" : "line-canvas"
+      id: "creator-canvas",
+      "class": "line-canvas"
     }).hide().appendTo($wrapper);
 
     // make it draggable
     $wrapper.draggable({
-      revert : true,
-      revertDuration : 0,
-      start : function() {
+      revert: true,
+      revertDuration: 0,
+      start: function () {
         dragging = true;
         // show creator canvas
         $canvas.show();
@@ -906,7 +927,7 @@ mindmaps.DefaultCanvasView = function() {
           self.lineColor = self.dragStarted(self.node);
         }
       },
-      drag : function(e, ui) {
+      drag: function (e, ui) {
         // update creator canvas
         var offsetX = ui.position.left / view.zoomFactor;
         var offsetY = ui.position.top / view.zoomFactor;
@@ -914,9 +935,9 @@ mindmaps.DefaultCanvasView = function() {
         // set depth+1 because we are drawing the canvas for the child
         var $node = $getNode(self.node);
         drawLineCanvas($canvas, self.depth + 1, offsetX, offsetY,
-            $fakeNode, $node, self.lineColor);
+          $fakeNode, $node, self.lineColor);
       },
-      stop : function(e, ui) {
+      stop: function (e, ui) {
         dragging = false;
         // remove creator canvas, gets replaced by real canvas
         $canvas.hide();
@@ -928,14 +949,14 @@ mindmaps.DefaultCanvasView = function() {
           var nubTop = ui.position.top / view.zoomFactor;
 
           var distance = mindmaps.Util.distance($wpLeft - nubLeft,
-              $wpTop - nubTop);
+            $wpTop - nubTop);
           self.dragStopped(self.node, nubLeft, nubTop, distance);
         }
 
         // remove any positioning that the draggable might have caused
         $wrapper.css({
-          left : "",
-          top : ""
+          left: "",
+          top: ""
         });
       }
     });
@@ -945,7 +966,7 @@ mindmaps.DefaultCanvasView = function() {
      * 
      * @param {mindmaps.Node} node
      */
-    this.attachToNode = function(node) {
+    this.attachToNode = function (node) {
       if (this.node === node) {
         return;
       }
@@ -971,7 +992,7 @@ mindmaps.DefaultCanvasView = function() {
     /**
      * Removes the tool from the current node.
      */
-    this.detach = function() {
+    this.detach = function () {
       $wrapper.detach();
       this.node = null;
     };
@@ -981,7 +1002,7 @@ mindmaps.DefaultCanvasView = function() {
      * 
      * @returns {Boolean}
      */
-    this.isDragging = function() {
+    this.isDragging = function () {
       return dragging;
     };
   }

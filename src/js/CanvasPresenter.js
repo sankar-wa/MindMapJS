@@ -9,21 +9,21 @@
  * @param {mindmaps.CanvasView} view
  * @param {mindmaps.ZoomController} zoomController
  */
-mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
-    view, zoomController) {
+mindmaps.CanvasPresenter = function (eventBus, commandRegistry, mindmapModel,
+  view, zoomController) {
   var self = this;
   var creator = view.getCreator();
 
   /**
    * Initializes this presenter.
    */
-  this.init = function() {
+  this.init = function () {
     var editCaptionCommand = commandRegistry
-        .get(mindmaps.EditNodeCaptionCommand);
+      .get(mindmaps.EditNodeCaptionCommand);
     editCaptionCommand.setHandler(this.editNodeCaption.bind(this));
 
     var toggleNodeFoldedCommand = commandRegistry
-        .get(mindmaps.ToggleNodeFoldedCommand);
+      .get(mindmaps.ToggleNodeFoldedCommand);
     toggleNodeFoldedCommand.setHandler(toggleFold);
   };
 
@@ -32,7 +32,7 @@ mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
    * 
    * @param {mindmaps.Node} node
    */
-  this.editNodeCaption = function(node) {
+  this.editNodeCaption = function (node) {
     if (!node) {
       node = mindmapModel.selectedNode;
     }
@@ -44,7 +44,7 @@ mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
    * 
    * @param {mindmaps.Node} node
    */
-  var toggleFold = function(node) {
+  var toggleFold = function (node) {
     if (!node) {
       node = mindmapModel.selectedNode;
     }
@@ -60,8 +60,8 @@ mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
    * @param {mindmaps.Node} selectedNode
    * @param {mindmaps.Node} oldSelectedNode
    */
-  var selectNode = function(selectedNode, oldSelectedNode) {
-
+  var selectNode = function (selectedNode, oldSelectedNode) {
+    debugger
     // deselect old node
     if (oldSelectedNode) {
       view.unhighlightNode(oldSelectedNode);
@@ -75,7 +75,7 @@ mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
    * 
    * @ignore
    */
-  view.mouseWheeled = function(delta) {
+  view.mouseWheeled = function (delta) {
     view.stopEditNodeCaption();
 
     if (delta > 0) {
@@ -90,7 +90,7 @@ mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
    * 
    * @ignore
    */
-  view.nodeMouseOver = function(node) {
+  view.nodeMouseOver = function (node) {
     if (view.isNodeDragging() || creator.isDragging()) {
       // dont relocate the creator if we are dragging
     } else {
@@ -103,7 +103,7 @@ mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
    * 
    * @ignore
    */
-  view.nodeCaptionMouseOver = function(node) {
+  view.nodeCaptionMouseOver = function (node) {
     if (view.isNodeDragging() || creator.isDragging()) {
       // dont relocate the creator if we are dragging
     } else {
@@ -116,7 +116,7 @@ mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
    * 
    * @ignore
    */
-  view.nodeMouseDown = function(node) {
+  view.nodeMouseDown = function (node) {
     mindmapModel.selectNode(node);
     // show creator
     creator.attachToNode(node);
@@ -130,7 +130,7 @@ mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
    * 
    * @ignore
    */
-  view.nodeDoubleClicked = function(node) {
+  view.nodeDoubleClicked = function (node) {
     view.editNodeCaption(node);
   };
 
@@ -142,7 +142,7 @@ mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
    * 
    * @ignore
    */
-  view.nodeDragged = function(node, offset) {
+  view.nodeDragged = function (node, offset) {
     // view has updated itself
 
     // update model
@@ -155,7 +155,7 @@ mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
    * 
    * @ignore
    */
-  view.foldButtonClicked = function(node) {
+  view.foldButtonClicked = function (node) {
     toggleFold(node);
   };
 
@@ -166,10 +166,10 @@ mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
    * 
    * @ignore
    */
-  creator.dragStarted = function(node) {
+  creator.dragStarted = function (node) {
     // set edge color for new node. inherit from parent or random when root
     var color = node.isRoot() ? mindmaps.Util.randomColor()
-        : node.branchColor;
+      : node.branchColor;
     return color;
   };
 
@@ -178,7 +178,7 @@ mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
    * 
    * @ignore
    */
-  creator.dragStopped = function(parent, offsetX, offsetY, distance) {
+  creator.dragStopped = function (parent, offsetX, offsetY, distance) {
     // disregard if the creator was only dragged a bit
     if (distance < 50) {
       return;
@@ -202,7 +202,7 @@ mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
    * @param {mindmaps.Node} node
    * @param {String} str
    */
-  view.nodeCaptionEditCommitted = function(node, str) {
+  view.nodeCaptionEditCommitted = function (node, str) {
     // avoid whitespace only strings
     var str = $.trim(str);
     if (!str) {
@@ -213,7 +213,7 @@ mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
     mindmapModel.changeNodeCaption(node, str);
   };
 
-  this.go = function() {
+  this.go = function () {
     view.init();
   };
 
@@ -238,8 +238,8 @@ mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
    */
   function bind() {
     // listen to global events
-    eventBus.subscribe(mindmaps.Event.DOCUMENT_OPENED, function(doc,
-        newDocument) {
+    eventBus.subscribe(mindmaps.Event.DOCUMENT_OPENED, function (doc,
+      newDocument) {
       showMindMap(doc);
 
       // if (doc.isNew()) {
@@ -249,16 +249,16 @@ mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
       // }
     });
 
-    eventBus.subscribe(mindmaps.Event.DOCUMENT_CLOSED, function(doc) {
+    eventBus.subscribe(mindmaps.Event.DOCUMENT_CLOSED, function (doc) {
       view.clear();
     });
 
-    eventBus.subscribe(mindmaps.Event.NODE_MOVED, function(node) {
+    eventBus.subscribe(mindmaps.Event.NODE_MOVED, function (node) {
       view.positionNode(node);
     });
 
-    eventBus.subscribe(mindmaps.Event.NODE_TEXT_CAPTION_CHANGED, function(
-        node) {
+    eventBus.subscribe(mindmaps.Event.NODE_TEXT_CAPTION_CHANGED, function (
+      node) {
       view.setNodeText(node, node.getCaption());
 
       // redraw node in case height has changed
@@ -266,7 +266,7 @@ mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
       view.redrawNodeConnectors(node);
     });
 
-    eventBus.subscribe(mindmaps.Event.NODE_CREATED, function(node) {
+    eventBus.subscribe(mindmaps.Event.NODE_CREATED, function (node) {
       view.createNode(node);
 
       // edit node caption immediately if requested
@@ -288,7 +288,7 @@ mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
       }
     });
 
-    eventBus.subscribe(mindmaps.Event.NODE_DELETED, function(node, parent) {
+    eventBus.subscribe(mindmaps.Event.NODE_DELETED, function (node, parent) {
       // select parent if we are deleting a selected node or a descendant
       var selected = mindmapModel.selectedNode;
       if (node === selected || node.isDescendant(selected)) {
@@ -304,33 +304,37 @@ mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
     });
 
     eventBus.subscribe(mindmaps.Event.NODE_SELECTED, selectNode);
-    
-    eventBus.subscribe(mindmaps.Event.NODE_OPENED, function(node) {
+
+    eventBus.subscribe(mindmaps.Event.NODE_OPENED, function (node) {
       view.openNode(node);
     });
 
-    eventBus.subscribe(mindmaps.Event.NODE_CLOSED, function(node) {
+    eventBus.subscribe(mindmaps.Event.NODE_CLOSED, function (node) {
       view.closeNode(node);
     });
 
-    eventBus.subscribe(mindmaps.Event.NODE_FONT_CHANGED, function(node) {
+    eventBus.subscribe(mindmaps.Event.NODE_FONT_CHANGED, function (node) {
       view.updateNode(node);
     });
 
-    eventBus.subscribe(mindmaps.Event.NODE_FONT_COLOR_PREVIEW, function(node, color) {
+    eventBus.subscribe(mindmaps.Event.NODE_TEXT_CHANGED, function (node) {
+      view.updateNode(node);
+    });
+
+    eventBus.subscribe(mindmaps.Event.NODE_FONT_COLOR_PREVIEW, function (node, color) {
       view.updateFontColor(node, color);
     });
 
-    eventBus.subscribe(mindmaps.Event.NODE_BRANCH_COLOR_CHANGED, function(
-        node) {
+    eventBus.subscribe(mindmaps.Event.NODE_BRANCH_COLOR_CHANGED, function (
+      node) {
       view.updateNode(node);
     });
-    
-    eventBus.subscribe(mindmaps.Event.NODE_BRANCH_COLOR_PREVIEW, function(node, color) {
+
+    eventBus.subscribe(mindmaps.Event.NODE_BRANCH_COLOR_PREVIEW, function (node, color) {
       view.updateBranchColor(node, color)
     });
 
-    eventBus.subscribe(mindmaps.Event.ZOOM_CHANGED, function(zoomFactor) {
+    eventBus.subscribe(mindmaps.Event.ZOOM_CHANGED, function (zoomFactor) {
       view.setZoomFactor(zoomFactor);
       view.applyViewZoom();
       view.scaleMap();

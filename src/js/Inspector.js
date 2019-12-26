@@ -3,32 +3,35 @@
  * 
  * @constructor
  */
-mindmaps.InspectorView = function() {
+mindmaps.InspectorView = function () {
   var self = this;
   var $content = $("#template-inspector").tmpl();
   var $sizeDecreaseButton = $("#inspector-button-font-size-decrease",
-      $content);
+    $content);
   var $sizeIncreaseButton = $("#inspector-button-font-size-increase",
-      $content);
+    $content);
   var $boldCheckbox = $("#inspector-checkbox-font-bold", $content);
   var $italicCheckbox = $("#inspector-checkbox-font-italic", $content);
   var $underlineCheckbox = $("#inspector-checkbox-font-underline", $content);
   var $linethroughCheckbox = $("#inspector-checkbox-font-linethrough",
-      $content);
+    $content);
   var $branchColorChildrenButton = $("#inspector-button-branch-color-children", $content);
+  var $branchNodeTextButton = $("#inspector-button-branch-edit-text", $content);
+  var $shapeButton = $(".btnShape", $content);
+
   var branchColorPicker = $("#inspector-branch-color-picker", $content);
   var fontColorPicker = $("#inspector-font-color-picker", $content);
-  var $allButtons = [ $sizeDecreaseButton, $sizeIncreaseButton,
-      $boldCheckbox, $italicCheckbox, $underlineCheckbox,
-      $linethroughCheckbox, $branchColorChildrenButton ];
-  var $allColorpickers = [ branchColorPicker, fontColorPicker ];
+  var $allButtons = [$sizeDecreaseButton, $sizeIncreaseButton,
+    $boldCheckbox, $italicCheckbox, $underlineCheckbox,
+    $linethroughCheckbox, $branchColorChildrenButton, $branchNodeTextButton, $shapeButton];
+  var $allColorpickers = [branchColorPicker, fontColorPicker];
 
   /**
    * Returns a jquery object.
    * 
    * @returns {jQuery}
    */
-  this.getContent = function() {
+  this.getContent = function () {
     return $content;
   };
 
@@ -37,13 +40,13 @@ mindmaps.InspectorView = function() {
    * 
    * @param {Boolean} enabled
    */
-  this.setControlsEnabled = function(enabled) {
+  this.setControlsEnabled = function (enabled) {
     var state = enabled ? "enable" : "disable";
-    $allButtons.forEach(function($button) {
+    $allButtons.forEach(function ($button) {
       $button.button(state);
     });
 
-    $allColorpickers.forEach(function($colorpicker) {
+    $allColorpickers.forEach(function ($colorpicker) {
       $colorpicker.miniColors("disabled", !enabled);
     });
   };
@@ -53,7 +56,7 @@ mindmaps.InspectorView = function() {
    * 
    * @param {Boolean} checked
    */
-  this.setBoldCheckboxState = function(checked) {
+  this.setBoldCheckboxState = function (checked) {
     $boldCheckbox.prop("checked", checked).button("refresh");
   };
 
@@ -62,7 +65,7 @@ mindmaps.InspectorView = function() {
    * 
    * @param {Boolean} checked
    */
-  this.setItalicCheckboxState = function(checked) {
+  this.setItalicCheckboxState = function (checked) {
     $italicCheckbox.prop("checked", checked).button("refresh");
   };
 
@@ -71,7 +74,7 @@ mindmaps.InspectorView = function() {
    * 
    * @param {Boolean} checked
    */
-  this.setUnderlineCheckboxState = function(checked) {
+  this.setUnderlineCheckboxState = function (checked) {
     $underlineCheckbox.prop("checked", checked).button("refresh");
   };
 
@@ -80,7 +83,7 @@ mindmaps.InspectorView = function() {
    * 
    * @param {Boolean} checked
    */
-  this.setLinethroughCheckboxState = function(checked) {
+  this.setLinethroughCheckboxState = function (checked) {
     $linethroughCheckbox.prop("checked", checked).button("refresh");
   };
 
@@ -89,7 +92,7 @@ mindmaps.InspectorView = function() {
    * 
    * @param {String} color
    */
-  this.setBranchColorPickerColor = function(color) {
+  this.setBranchColorPickerColor = function (color) {
     branchColorPicker.miniColors("value", color);
   };
 
@@ -98,51 +101,53 @@ mindmaps.InspectorView = function() {
    * 
    * @param {String} color
    */
-  this.setFontColorPickerColor = function(color) {
+  this.setFontColorPickerColor = function (color) {
     fontColorPicker.miniColors("value", color);
   };
 
   /**
    * Initialise
    */
-  this.init = function() {
+  this.init = function () {
     $(".buttonset", $content).buttonset();
     $branchColorChildrenButton.button();
+    $branchNodeTextButton.button();
+    $shapeButton.button(this);
 
-    $sizeDecreaseButton.click(function() {
+    $sizeDecreaseButton.click(function () {
       if (self.fontSizeDecreaseButtonClicked) {
         self.fontSizeDecreaseButtonClicked();
       }
     });
 
-    $sizeIncreaseButton.click(function() {
+    $sizeIncreaseButton.click(function () {
       if (self.fontSizeIncreaseButtonClicked) {
         self.fontSizeIncreaseButtonClicked();
       }
     });
 
-    $boldCheckbox.click(function() {
+    $boldCheckbox.click(function () {
       if (self.fontBoldCheckboxClicked) {
         var checked = $(this).prop("checked");
         self.fontBoldCheckboxClicked(checked);
       }
     });
 
-    $italicCheckbox.click(function() {
+    $italicCheckbox.click(function () {
       if (self.fontItalicCheckboxClicked) {
         var checked = $(this).prop("checked");
         self.fontItalicCheckboxClicked(checked);
       }
     });
 
-    $underlineCheckbox.click(function() {
+    $underlineCheckbox.click(function () {
       if (self.fontUnderlineCheckboxClicked) {
         var checked = $(this).prop("checked");
         self.fontUnderlineCheckboxClicked(checked);
       }
     });
 
-    $linethroughCheckbox.click(function() {
+    $linethroughCheckbox.click(function () {
       if (self.fontLinethroughCheckboxClicked) {
         var checked = $(this).prop("checked");
         self.fontLinethroughCheckboxClicked(checked);
@@ -150,7 +155,7 @@ mindmaps.InspectorView = function() {
     });
 
     branchColorPicker.miniColors({
-      hide : function(hex) {
+      hide: function (hex) {
         // dont emit event if picker was hidden due to disable
         if (this.attr('disabled')) {
           return;
@@ -162,7 +167,7 @@ mindmaps.InspectorView = function() {
         }
       },
 
-      move : function(hex) {
+      move: function (hex) {
         if (self.branchColorPreview) {
           self.branchColorPreview(hex);
         }
@@ -170,7 +175,7 @@ mindmaps.InspectorView = function() {
     });
 
     fontColorPicker.miniColors({
-      hide : function(hex) {
+      hide: function (hex) {
         // dont emit event if picker was hidden due to disable
         if (this.attr('disabled')) {
           return;
@@ -181,16 +186,31 @@ mindmaps.InspectorView = function() {
         }
       },
 
-      move: function(hex) {
+      move: function (hex) {
         if (self.fontColorPreview) {
           self.fontColorPreview(hex);
         }
       }
     });
 
-    $branchColorChildrenButton.click(function() {
+    $branchColorChildrenButton.click(function () {
       if (self.branchColorChildrenButtonClicked) {
         self.branchColorChildrenButtonClicked();
+      }
+    });
+
+    $branchNodeTextButton.click(function () {
+      if (self.branchNodeTextButtonClicked) {
+        self.branchNodeTextButtonClicked();
+      }
+    });
+    $shapeButton.click(function (e) {
+      var shape = "rect";
+      if (this.attributes["data-shape"]) {
+        shape = this.attributes["data-shape"].value
+      }
+      if (self.shapeButtonClicked) {
+        self.shapeButtonClicked(shape);
       }
     });
   };
@@ -205,110 +225,130 @@ mindmaps.InspectorView = function() {
  * @param {mindmaps.MindMapModel} mindmapModel
  * @param {mindmaps.InspectorView} view
  */
-mindmaps.InspectorPresenter = function(eventBus, mindmapModel, view) {
+mindmaps.InspectorPresenter = function (eventBus, mindmapModel, view) {
   var self = this;
 
   /**
    * View callbacks: React to user input and execute appropiate action.
    */
 
-  view.fontSizeDecreaseButtonClicked = function() {
+  view.fontSizeDecreaseButtonClicked = function () {
     var action = new mindmaps.action.DecreaseNodeFontSizeAction(
-        mindmapModel.selectedNode);
+      mindmapModel.selectedNode);
     mindmapModel.executeAction(action);
   };
 
-  view.fontSizeIncreaseButtonClicked = function() {
+  view.fontSizeIncreaseButtonClicked = function () {
     var action = new mindmaps.action.IncreaseNodeFontSizeAction(
-        mindmapModel.selectedNode);
+      mindmapModel.selectedNode);
     mindmapModel.executeAction(action);
   };
 
-  view.fontBoldCheckboxClicked = function(checked) {
+  view.fontBoldCheckboxClicked = function (checked) {
     var action = new mindmaps.action.SetFontWeightAction(
-        mindmapModel.selectedNode, checked);
+      mindmapModel.selectedNode, checked);
     mindmapModel.executeAction(action);
   };
 
-  view.fontItalicCheckboxClicked = function(checked) {
+  view.fontItalicCheckboxClicked = function (checked) {
     var action = new mindmaps.action.SetFontStyleAction(
-        mindmapModel.selectedNode, checked);
+      mindmapModel.selectedNode, checked);
     mindmapModel.executeAction(action);
   };
 
-  view.fontUnderlineCheckboxClicked = function(checked) {
+  view.fontUnderlineCheckboxClicked = function (checked) {
     var action = new mindmaps.action.SetFontDecorationAction(
-        mindmapModel.selectedNode, checked ? "underline" : "none");
+      mindmapModel.selectedNode, checked ? "underline" : "none");
     mindmapModel.executeAction(action);
   };
 
-  view.fontLinethroughCheckboxClicked = function(checked) {
+  view.fontLinethroughCheckboxClicked = function (checked) {
     var action = new mindmaps.action.SetFontDecorationAction(
-        mindmapModel.selectedNode, checked ? "line-through" : "none");
+      mindmapModel.selectedNode, checked ? "line-through" : "none");
     mindmapModel.executeAction(action);
   };
 
-  view.branchColorPicked = function(color) {
+  view.branchColorPicked = function (color) {
     var action = new mindmaps.action.SetBranchColorAction(mindmapModel.selectedNode, color);
     mindmapModel.executeAction(action);
   };
 
-  view.branchColorPreview = function(color) {
-    eventBus.publish(mindmaps.Event.NODE_BRANCH_COLOR_PREVIEW, 
-        mindmapModel.selectedNode, color);
+  view.branchColorPreview = function (color) {
+    eventBus.publish(mindmaps.Event.NODE_BRANCH_COLOR_PREVIEW,
+      mindmapModel.selectedNode, color);
   }
 
-  view.fontColorPicked = function(color) {
+  view.fontColorPicked = function (color) {
     var action = new mindmaps.action.SetFontColorAction(
-        mindmapModel.selectedNode, color);
+      mindmapModel.selectedNode, color);
     mindmapModel.executeAction(action);
   };
 
-  view.fontColorPreview = function(color) {
-    eventBus.publish(mindmaps.Event.NODE_FONT_COLOR_PREVIEW, 
-        mindmapModel.selectedNode, color);
+  view.fontColorPreview = function (color) {
+    eventBus.publish(mindmaps.Event.NODE_FONT_COLOR_PREVIEW,
+      mindmapModel.selectedNode, color);
   };
 
   /**
    * Change branch color of all the node's children.
    */
-  view.branchColorChildrenButtonClicked = function() {
+  view.branchColorChildrenButtonClicked = function () {
     var action = new mindmaps.action.SetChildrenBranchColorAction(
-        mindmapModel.selectedNode);
+      mindmapModel.selectedNode);
+    mindmapModel.executeAction(action);
+  }
+
+  view.shapeButtonClicked = function (shape) {
+    var action = new mindmaps.action.ChangeShapeAction(mindmapModel.selectedNode, shape);
+    mindmapModel.executeAction(action);
+  }
+
+  /**
+   * Change branch color of all the node's children.
+   */
+  view.branchNodeTextButtonClicked = function () {
+    var newText = $('#inspector-branch-edit-node').val();
+    var action = new mindmaps.action.ChangeNodeTextAction(mindmapModel.selectedNode, newText);
     mindmapModel.executeAction(action);
   }
 
   /**
    * Update view on font events.
    */
-  eventBus.subscribe(mindmaps.Event.NODE_FONT_CHANGED, function(node) {
+  eventBus.subscribe(mindmaps.Event.NODE_FONT_CHANGED, function (node) {
+    if (mindmapModel.selectedNode === node) {
+      updateView(node);
+    }
+  });
+
+  eventBus.subscribe(mindmaps.Event.NODE_TEXT_CHANGED, function (node, shape) {
     if (mindmapModel.selectedNode === node) {
       updateView(node);
     }
   });
 
   eventBus.subscribe(mindmaps.Event.NODE_BRANCH_COLOR_CHANGED,
-      function(node) {
-        if (mindmapModel.selectedNode === node) {
-          updateView(node);
-        }
-      });
+    function (node) {
+      if (mindmapModel.selectedNode === node) {
+        updateView(node);
+      }
+    });
 
-  eventBus.subscribe(mindmaps.Event.NODE_SELECTED, function(node) {
+  eventBus.subscribe(mindmaps.Event.NODE_SELECTED, function (node) {
     updateView(node);
   });
 
   /**
    * Enable controls when a document has been opened.
    */
-  eventBus.subscribe(mindmaps.Event.DOCUMENT_OPENED, function() {
+  eventBus.subscribe(mindmaps.Event.DOCUMENT_OPENED, function () {
     view.setControlsEnabled(true);
   });
 
   /**
    * Disable controls when document was closed.
    */
-  eventBus.subscribe(mindmaps.Event.DOCUMENT_CLOSED, function() {
+  eventBus.subscribe(mindmaps.Event.DOCUMENT_CLOSED, function () {
     view.setControlsEnabled(false);
   });
 
@@ -327,7 +367,7 @@ mindmaps.InspectorPresenter = function(eventBus, mindmapModel, view) {
     view.setBranchColorPickerColor(node.branchColor);
   }
 
-  this.go = function() {
+  this.go = function () {
     view.init();
   };
 };
