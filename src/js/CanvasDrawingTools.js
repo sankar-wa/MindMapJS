@@ -72,8 +72,7 @@ mindmaps.CanvasBranchDrawer = function() {
      * @param {String} color
      * @param {Number} zoomFactor
      */
-    this.render = function(ctx, depth, offsetX, offsetY, $node, $parent, color,
-        zoomFactor) {
+    this.render = function(ctx, depth, offsetX, offsetY, $node, $parent, color, zoomFactor) {
 
         offsetX = offsetX * zoomFactor;
         offsetY = offsetY * zoomFactor;
@@ -137,8 +136,7 @@ mindmaps.CanvasBranchDrawer = function() {
             }
         }
 
-        var lineWidth = mindmaps.CanvasDrawingUtil.getLineWidth(zoomFactor,
-            depth);
+        var lineWidth = mindmaps.CanvasDrawingUtil.getLineWidth(zoomFactor, depth);
         var halfLineWidth = lineWidth / 2;
 
         // avoid zero widths
@@ -306,12 +304,12 @@ DrawCurvedArrow = (function(bez, ctx) {
     ctx.rotate(endingAngle);
 
     if ((bez.sx > 10 && bez.sy < 10) || (bez.sx < 10 && bez.sy > 10)) {
-        ctx.moveTo(0, 0);
+        ctx.moveTo(5, 5);
         ctx.lineTo(0, size * 2);
         ctx.lineTo(-size * 2, 0);
         ctx.lineTo(0, -size * 2);
     } else {
-        ctx.moveTo(0, 0);
+        ctx.moveTo(5, 5);
         ctx.lineTo(0, -size * 2);
         ctx.lineTo(size * 2, 0);
         ctx.lineTo(0, size * 2);
