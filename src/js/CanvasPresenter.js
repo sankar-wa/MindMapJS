@@ -324,6 +324,14 @@ mindmaps.CanvasPresenter = function(eventBus, commandRegistry, mindmapModel,
             view.updateFontColor(node, color);
         });
 
+        eventBus.subscribe(mindmaps.Event.NODE_LINE_COLOR_PREVIEW, function(node, color) {
+            view.updateNodeColor(node, color);
+        });
+
+        eventBus.subscribe(mindmaps.Event.NODE_LINESTYLE_PREVIEW, function(node, style) {
+            view.updateNodeLineWidth(node, style);
+        });
+
         eventBus.subscribe(mindmaps.Event.NODE_BRANCH_COLOR_CHANGED, function(
             node) {
             view.updateNode(node);

@@ -216,7 +216,7 @@ mindmaps.CanvasBranchDrawer = function() {
         ctx.strokeStyle = color;
         ctx.fillStyle = color;
 
-        console.log(startX, ", ", startY, ", ", cp1x, ", ", cp1y, ", ", cp2x, ", ", cp2y, ", ", endX, ", ", endY);
+        // console.log(startX, ", ", startY, ", ", cp1x, ", ", cp1y, ", ", cp2x, ", ", cp2y, ", ", endX, ", ", endY);
 
         ctx.beginPath();
 
@@ -299,7 +299,7 @@ DrawCurvedArrow = (function(bez, ctx) {
     ctx.beginPath();
     ctx.save();
     ctx.translate(bez.sx, bez.sy);
-    console.log("endingAngle ", endingAngle);
+    // console.log("endingAngle ", endingAngle);
 
     ctx.rotate(endingAngle);
 
@@ -309,7 +309,7 @@ DrawCurvedArrow = (function(bez, ctx) {
         ctx.lineTo(-size * 2, 0);
         ctx.lineTo(0, -size * 2);
     } else {
-        ctx.moveTo(5, 5);
+        ctx.moveTo(0, 0);
         ctx.lineTo(0, -size * 2);
         ctx.lineTo(size * 2, 0);
         ctx.lineTo(0, size * 2);

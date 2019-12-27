@@ -179,20 +179,32 @@
                         </td>
                     </tr>
                     <tr>
+                        <td>Line Style :</td>
+                        <td>
+                            <input type="hidden" id="inspector-line-color-picker" class="colorpicker" />
+                            <select id="inspector-line-style" class="txtNode">
+                                <option value="solid">solid  ___</option>
+                                <option value="dotted">dotted ....</option>
+                                <option value="dashed">dashed ----</option>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <!-- <tr>
                         <td>Image :</td>
                         <td>
                             <input type="file" id="btnImage" data-shape="Image" class="btnImage buttons-small buttons-less-padding">
                         </td>
-                    </tr>
+                    </tr> -->
                 </table>
             </div>
         </div>
     </script>
 
-    <script id="template-export-map " type="text/x-jquery-tmpl ">
-        <div id="export-map-dialog " title="Export mind map ">
+    <script id="template-export-map" type="text/x-jquery-tmpl">
+        <div id="export-map-dialog" title="Export mind map">
             <h2 class='image-description'>To download the map right-click the image and select "Save Image As "</h2>
-            <div id="export-preview "></div>
+            <div id="export-preview"></div>
         </div>
     </script>
 
@@ -222,14 +234,20 @@
 
                 <div class="buttons">
                     <span class="buttons-left"> </span> <span class="buttons-right">
-            </span>
+                    </span>
                 </div>
+
 
             </div>
         </div>
         <div id="canvas-container">
             <div id="drawing-area" class="no-select"></div>
         </div>
+
+        <!-- <div class="popup" onclick="myFunction()">Click me to toggle the popup!
+            <span class="popuptext" id="myPopup">A Simple Popup!</span>
+        </div> -->
+
         <div id="bottombar">
             <div id="about">
                 <a href="about.html" target="_blank">About mindmaps</a> <span style="padding: 0 4px;">|</span> <a style="font-weight: bold" href="https://docs.google.com/forms/d/e/1FAIpQLSfETMwnwQQXx9aAEFA26jbuBJGkU9zLCW7Rj1Taf5u3k-2NYQ/viewform?usp=sf_link"

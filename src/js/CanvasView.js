@@ -188,10 +188,10 @@ mindmaps.DefaultCanvasView = function() {
         });
     }
 
-    var oldCanvas;
+    var selectedCanvasID = "";
+    var selectedNode = null;
 
-    function drawLineCanvas($canvas, depth, offsetX, offsetY, $node, $parent,
-        color) {
+    function drawLineCanvas($canvas, depth, offsetX, offsetY, $node, $parent, color) {
         var canvas = $canvas[0];
         if (canvas) {
             var ctx = canvas.getContext("2d");
@@ -205,17 +205,18 @@ mindmaps.DefaultCanvasView = function() {
                 console.log('ctx', ctx);
                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
                 branchDrawer.render(ctx, depth, offsetX, offsetY, $node, $parent, 'black', self.zoomFactor);
-
+                selectedCanvasID = ctx.canvas.id;
+                selectedNode = $node;
                 // var popup = document.getElementById("myPopup");
                 // popup.classList.toggle("show");
             });
 
-            canvas.addEventListener("mouseleave", function(e, ui) {
-                console.log('mouseleave', e);
-                console.log('ctx', ctx);
-                ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-                branchDrawer.render(ctx, depth, offsetX, offsetY, $node, $parent, color, self.zoomFactor);
-            });
+            // canvas.addEventListener("mouseleave", function(e, ui) {
+            //     console.log('mouseleave', e);
+            //     console.log('ctx', ctx);
+            //     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            //     branchDrawer.render(ctx, depth, offsetX, offsetY, $node, $parent, color, self.zoomFactor);
+            // });
         }
     }
 
@@ -225,6 +226,16 @@ mindmaps.DefaultCanvasView = function() {
 
         var $drawingArea = this.$getDrawingArea();
         $drawingArea.addClass("mindmap");
+
+
+        var drawArea = document.getElementById("drawing-area");
+        drawArea.addEventListener("mousedown", function(e, ui) {
+            if (selectedCanvasID != "" && selectedNode != null) {
+                var $node = selectedNode;
+
+                // selectedCanvasID = "";
+            }
+        });
 
         // setup delegates
         $drawingArea.delegate("div.node-caption", "mousedown", function(e) {
@@ -711,6 +722,28 @@ mindmaps.DefaultCanvasView = function() {
 
         this.redrawNodeConnectors(node);
 
+    };
+
+    this.updateNodeColor = function(node, color) {
+        debugger
+        var $node = $getNode(node);
+        var $nodeBox = $($node[0].firstElementChild)
+        $nodeBox.css({
+            "border-style": "solid",
+            "border-color": color,
+            "border-width": "2px",
+        });
+        // this.redrawNodeConnectors(node);
+    };
+
+    this.updateNodeLineWidth = function(node, style) {
+        var $node = $getNode(node);
+        var $nodeBox = $($node[0].firstElementChild)
+        $nodeBox.css({
+            "border-style": style,
+            "border-width": "2px",
+        });
+        // this.redrawNodeConnectors(node);
     };
 
     this.updateShape = function(node, shape) {
